@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Start a game!{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <button type="button"> Start a new game </button>
+    <p> OR </p>
+    <label for="pgn">Enter your game as pgn</label>
+    <input type="text" id="pgn">
+{% endblock %}
