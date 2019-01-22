@@ -5,5 +5,5 @@ WORKDIR /usr/src/app
 COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system
 
-COPY . .
+COPY ./src .
 CMD [ "python", "-u", "./app.py" ]
