@@ -30,7 +30,7 @@ function init_handlers() {
     const tab = document.getElementById("board-id")
     const cells = tab.getElementsByTagName("td")
     for (let cell of cells){
-        cell.addEventListener('drop', drop_handler);
+        cell.addEventListener('drop', drop_handler(cell));
         cell.addEventListener('dragover', dragover_handler);
     }
 }
@@ -53,10 +53,13 @@ function dragover_handler(ev) {
     ev.preventDefault();
 }
 
-function drop_handler(ev) {
-    ev.preventDefault();
-    var data = ev.dataTransfer.getData("text/plain");
-    ev.target.appendChild(document.getElementById(data));
+function drop_handler(cell) {
+    return function (ev)
+    {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text/plain");
+        cell.appendChild(document.getElementById(data));
+    }
 }
 
 window.onbeforeunload = function() {
