@@ -36,8 +36,8 @@ function init_handlers() {
 }
 
 function setPiece(piece, position) {
-    el = document.getElementById(position)
-    img = new Image()
+    const el = document.getElementById(position)
+    const img = new Image()
     img.id = piece + position
     img.src = `img/${piece}.svg`
     img.addEventListener('dragstart', drag_image_handler)
@@ -45,7 +45,7 @@ function setPiece(piece, position) {
 }
 
 function drag_image_handler(ev) {
-    var dt = event.dataTransfer;
+    const dt = event.dataTransfer;
     dt.setData("text/plain", ev.target.id);
 }
 
@@ -57,7 +57,10 @@ function drop_handler(cell) {
     return function (ev)
     {
         ev.preventDefault();
-        var data = ev.dataTransfer.getData("text/plain");
+        if (cell.childElementCount > 0) {
+            return false
+        }
+        const data = ev.dataTransfer.getData("text/plain");
         cell.appendChild(document.getElementById(data));
     }
 }
