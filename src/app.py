@@ -13,7 +13,12 @@ def start():
 
 @app.route('/games/<uuid:gameid>')
 def game(gameid):
-    # load pgn for game, pass to game template
+    # load pgn for game, convert to board dict, pass to game template
+    return render_template('board.html')
+
+
+@app.route('/game/<uuid:gameid>/move', methods=['POST'])
+def process_move(gameid):
     pass
 
 
