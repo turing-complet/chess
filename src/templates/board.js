@@ -69,8 +69,8 @@ function setLosses() {
     wl = document.getElementById("white-loss")
 
     // console.log("Clear loss area")
-    bl.childNodes.forEach(function(c) { c.remove() })
-    wl.childNodes.forEach(function(c) { c.remove() })
+    while (bl.firstChild) { bl.removeChild(bl.firstChild) }
+    while (wl.firstChild) { wl.removeChild(wl.firstChild) }
 
     console.log("blackLosses: " + blackLosses)
     blackLosses.forEach(function(p) {
@@ -96,11 +96,19 @@ function drop_handler(cell) {
     return function (ev)
     {
         ev.preventDefault();
+        
+        const data = ev.dataTransfer.getData("text/plain");
+        const img = document.getElementById(data);
+
+        if (img.parentNode.id == cell.id) {
+            console.log("Cannot capture self")
+            return false
+        }
+
         if (cell.childElementCount > 0) {
             capture(cell.id);
         }
-        const data = ev.dataTransfer.getData("text/plain");
-        const img = document.getElementById(data);
+
         delete state[img.parentNode.id]
 
         piece = img.id.substring(0, 2)
