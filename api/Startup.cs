@@ -42,6 +42,7 @@ namespace api
 
             // app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
         }
     }

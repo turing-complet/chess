@@ -26,7 +26,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Game> Get(Guid id)
+        public Game Get(Guid id)
         {
             return _repository.GetGame(id);
         }
@@ -34,10 +34,6 @@ namespace api.Controllers
         [HttpPost]
         public Guid Post([FromBody] Game game)
         {
-            if (game.Id == null)
-            {
-                game.Id = Guid.NewGuid();
-            }
             _repository.Save(game);
             return game.Id;
         }

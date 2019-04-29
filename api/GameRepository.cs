@@ -28,34 +28,20 @@ namespace api
             return blobs.Select(b => b.StorageUri.ToString());
         }
         
+        // why returns 204
         public Game GetGame(Guid id)
         {
-            CloudBlockBlob blockBlob = _cloudBlobContainer.GetBlockBlobReference(id.ToString("N"));
-            using (Stream jsonStream = new MemoryStream())
-            {
-                blockBlob.DownloadToStream(jsonStream);
-                return DeserializeFromStream<Game>(jsonStream);
-            }
+            CloudBlockBlob blockBlob = _cloudBlobContainer.GetBlockBlobReference(id.ToString());
+            var jsonStream = new MemoryStream();
+            blockBlob.DownloadToStream(jsonStream);
+            jsonStream.Position = 0;
+            return DeserializeFromStream<Game>(jsonStream);
         }
 
         public void Save(Game game)
         {
-            CloudBlockBlob blockBlob = _cloudBlobContainer.GetBlockBlobReference(game.Id.ToString("N"));
-            using (var memStream = new MemoryStream())
-            {
-                SerializeToStream(memStream, game);
-                blockBlob.UploadFromStream(memStream);
-            }
-        }
-
-        private void SerializeToStream(Stream stream, Game game)
-        {
-            var serializer = new JsonSerializer();
-            using (var sr = new StreamWriter(stream))
-            using (var jsonWriter = new JsonTextWriter(sr))
-            {
-                serializer.Serialize(jsonWriter, game);
-            }
+            CloudBlockBlob blockBlob = _cloudBlobContainer.GetBlockBlobReference(game.Id.ToString());
+            blockBlob.UploadText(JsonConvert.SerializeObject(game));
         }
 
         private T DeserializeFromStream<T>(Stream stream)
