@@ -1,0 +1,1 @@
+The easiest way I could think of to implement chess. With a few artistic flourishes thrown in.

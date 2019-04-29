@@ -10,6 +10,8 @@ let state = {
     "a7": "bp", "b7": "bp", "c7": "bp", "d7": "bp", "e7": "bp", "f7": "bp", "g7": "bp", "h7": "bp"
 }
 
+let stack = [state]
+
 let blackLosses = []
 let whiteLosses = []
 
@@ -53,14 +55,14 @@ function setPiece(piece, position) {
     const el = document.getElementById(position)
     const img = new Image()
     img.id = piece + position
-    img.src = `img/${piece}.svg`
+    img.src = `images/${piece}.svg`
     img.addEventListener('dragstart', drag_image_handler)
     el.appendChild(img)
 }
 
 function newImage(piece) {
     const img = new Image()
-    img.src = `img/${piece}.svg`
+    img.src = `images/${piece}.svg`
     return img
 }
 
