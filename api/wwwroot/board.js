@@ -19,11 +19,27 @@ function render() {
     console.log("Rendering board")
     init_board();
     console.log(state)
-    Object.keys(state).forEach(function(position) {
-        setPiece(state[position], position)
+
+    const urlParams = new URLSearchParams(window.location.search);
+    let id = urlParams.get('id')
+    load_game(id).then(function(json) {
+        Object.keys(json.state).forEach(function(position) {
+            console.log(JSON.stringify(json.state))
+            setPiece(json.state[position], position)
+        })
     })
+    // Object.keys(state).forEach(function(position) {
+    //     setPiece(state[position], position)
+    // })
     setLosses();
     init_handlers()
+}
+
+function load_game(id) {
+    return fetch(window.location.origin + '/api/game/' + id)
+        .then(function(response) {
+            return response.json();
+          })
 }
 
 function init_board() {

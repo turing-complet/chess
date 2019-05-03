@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace api.Controllers
 {
@@ -32,10 +33,10 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public Guid Post([FromBody] Game game)
+        public ActionResult<GameId> Post([FromBody] Game game)
         {
             _repository.Save(game);
-            return game.Id;
+            return new GameId { Id = game.Id };
         }
 
         [HttpPut("{id}")]
@@ -47,5 +48,11 @@ namespace api.Controllers
             }
             _repository.Save(game);
         }
+    }
+
+    public class GameId
+    {
+        [JsonProperty("id")]
+        public Guid Id { get; set; }
     }
 }

@@ -15,12 +15,16 @@ let state = {
 }
 
 function newGame() {
-    const url = "http://localhost:5000/api/game"
+    const url = window.location.origin + '/api/game'
     fetch(url, {
         headers: {
             "content-type": "application/json"
         },
         method: 'POST',
         body: JSON.stringify({"state": state})
-    })
+    })// loading animation //.then(response => window.location.href = gameUrl(response.json().id))
+}
+
+function gameUrl(id) {
+    return window.location.origin + '/api/game/' + id
 }

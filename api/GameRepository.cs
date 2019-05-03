@@ -25,7 +25,7 @@ namespace api
         public IEnumerable<string> List()
         {
             var blobs = _cloudBlobContainer.ListBlobs();
-            return blobs.Select(b => b.StorageUri.ToString());
+            return blobs.Select(b => b.Uri.ToString());
         }
         
         // why returns 204
