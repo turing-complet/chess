@@ -3,6 +3,8 @@ window.onload = function() {
     // init_handlers();
 }
 
+GAME_API = window.location.origin + '/api/game/'
+
 let state = {
     "a1": "wr", "b1": "wk", "c1": "wb", "d1": "wq", "e1": "wK", "f1": "wb", "g1": "wk", "h1": "wr",
     "a8": "br", "b8": "bk", "c8": "bb", "d8": "bq", "e8": "bK", "f8": "bb", "g8": "bk", "h8": "br",
@@ -30,7 +32,7 @@ function render() {
 }
 
 function load_game(id) {
-    return fetch(window.location.origin + '/api/game/' + id)
+    return fetch(GAME_API + id)
         .then(function(response) {
             return response.json();
           })
@@ -133,8 +135,21 @@ function drop_handler(cell) {
 
         piece = img.id.substring(0, 2)
         state[cell.id] = piece
+        save_game(state)
         render();
     }
+}
+
+function save_game(state) {
+    const urlParams = new URLSearchParams(window.location.search);
+    let id = urlParams.get('id')
+    fetch(GAME_API + id, {
+        headers: {
+            "content-type": "application/json"
+        },
+        method: 'PUT',
+        body: JSON.stringify({"id": id, "state": state})
+    })
 }
 
 function capture(position) {
@@ -147,10 +162,6 @@ function capture(position) {
         blackLosses.push(piece)
     }
     delete state[position]
-}
-
-function validate(p1, p2) {
-    return true;
 }
 
 
