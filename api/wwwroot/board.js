@@ -23,14 +23,8 @@ function render() {
     const urlParams = new URLSearchParams(window.location.search);
     let id = urlParams.get('id')
     load_game(id).then(function(json) {
-        Object.keys(json.state).forEach(function(position) {
-            console.log(JSON.stringify(json.state))
-            setPiece(json.state[position], position)
-        })
+        set_pieces(json.state)
     })
-    // Object.keys(state).forEach(function(position) {
-    //     setPiece(state[position], position)
-    // })
     setLosses();
     init_handlers()
 }
@@ -41,6 +35,14 @@ function load_game(id) {
             return response.json();
           })
 }
+
+function set_pieces(state) {
+    Object.keys(state).forEach(function(position) {
+        console.log(JSON.stringify(state))
+        setPiece(state[position], position)
+    })
+}
+
 
 function init_board() {
     table = document.getElementById("board-id")

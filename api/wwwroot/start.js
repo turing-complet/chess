@@ -2,9 +2,12 @@ window.onload = function() {
     init();
 }
 
+GAME_API = window.location.origin + '/api/game/'
+
 function init() {
     const start = document.getElementById("start-game")
     start.addEventListener('click', newGame)
+    populate_game_list()
 }
 
 let state = {
@@ -15,8 +18,7 @@ let state = {
 }
 
 function newGame() {
-    const url = window.location.origin + '/api/game'
-    fetch(url, {
+    fetch(GAME_API, {
         headers: {
             "content-type": "application/json"
         },
@@ -25,6 +27,23 @@ function newGame() {
     })// loading animation //.then(response => window.location.href = gameUrl(response.json().id))
 }
 
-function gameUrl(id) {
-    return window.location.origin + '/api/game/' + id
+function populate_game_list() {
+    const lst = document.getElementById('game-list-id')
+    list_games().then(function (json) {
+        for (var gameid of json) {
+            let a = document.createElement("a");
+            let li = document.createElement("li");
+            a.innerText = gameid
+            a.href = window.location.origin + '/board.html?id=' + gameid
+            li.appendChild(a)
+            lst.appendChild(li)
+        }
+    });
+}
+
+function list_games() {
+    return fetch(GAME_API)
+        .then(function(response) {
+            return response.json();
+          })
 }
