@@ -7,7 +7,8 @@ namespace api
         public Guid Id { get; set; } = Guid.NewGuid();
         public Dictionary<string, string> State { get; set; } // store current state for now, convert to full history at some point
         public bool IsWhiteTurn { get; set; } = true;
-        public DateTime LastMoveAt { get; set; }
+        public DateTime LastMoveAt { get; set; } = DateTime.Now;
+        public List<string> Losses { get; set; } = new List<string>();
     }
 
 }

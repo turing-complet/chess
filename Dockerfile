@@ -9,8 +9,18 @@ RUN dotnet restore
 RUN dotnet build -c Release
 RUN dotnet publish -c Release -o out
 
+FROM node:latest as tsbuild
+
+RUN npm install -g typescript
+WORKDIR /app
+COPY tsconfig.json ./
+COPY wwwroot/*.ts ./
+RUN ls
+RUN tsc -p tsconfig.json
+
 # Second stage - Build runtime image
 FROM microsoft/dotnet:2.2-aspnetcore-runtime
 WORKDIR /app
+COPY --from=tsbuild /app ./wwwroot
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet", "api.dll"]

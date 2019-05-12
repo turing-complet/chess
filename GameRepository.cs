@@ -28,7 +28,6 @@ namespace api
             return blobs.Select(b => b.Name);
         }
         
-        // why returns 204
         public Game GetGame(Guid id)
         {
             CloudBlockBlob blockBlob = _cloudBlobContainer.GetBlockBlobReference(id.ToString());
