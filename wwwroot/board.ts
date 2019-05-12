@@ -10,13 +10,9 @@ window.onload = function() {
     }).then(function() {
         render(currentGame)
     });
-
-    // render(currentGame);
 }
 
 var currentGame: Game;
-let blackLosses: string[] = []
-let whiteLosses: string[] = []
 
 function render(currentGame: Game) {
     console.log("Rendering board")
@@ -81,17 +77,14 @@ function setLosses() {
     let bl = document.getElementById("black-loss")
     let wl = document.getElementById("white-loss")
 
-    // console.log("Clear loss area")
     while (bl!.firstChild) { bl!.removeChild(bl!.firstChild) }
     while (wl!.firstChild) { wl!.removeChild(wl!.firstChild) }
 
-    console.log("blackLosses: " + blackLosses)
-    blackLosses.forEach(function(p) {
+    currentGame.blackLosses.forEach(function(p) {
         bl!.appendChild(newImage(p))
     })
 
-    console.log("whiteLosses: " + whiteLosses)
-    whiteLosses.forEach(function(p) {
+    currentGame.whiteLosses.forEach(function(p) {
         wl!.appendChild(newImage(p))
     })
 }
@@ -117,30 +110,10 @@ function drop_handler(cell: HTMLTableCellElement) {
         if (prevLocation == cell.id) {
             return false
         }
-
-        if (cell.childElementCount > 0) {
-            capture(cell.id);
-        }
-
-        currentGame.deleteAt(prevLocation);
-
-        const piece = img!.id.substring(0, 2);
-        currentGame.setPiece(cell.id, piece);
+        currentGame.move(prevLocation, cell.id)
         save_game(currentGame)
         render(currentGame);
     }
-}
-
-function capture(position: string) {
-    const piece = currentGame.state.get(position)!
-    console.log("position: " + position)
-    console.log("piece: " + piece)
-    if (piece[0] == "w") {
-        whiteLosses.push(piece)
-    } else {
-        blackLosses.push(piece)
-    }
-    currentGame.deleteAt(position)
 }
 
 window.onbeforeunload = function() {

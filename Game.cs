@@ -8,7 +8,8 @@ namespace api
         public Dictionary<string, string> State { get; set; } // store current state for now, convert to full history at some point
         public bool IsWhiteTurn { get; set; } = true;
         public DateTime LastMoveAt { get; set; } = DateTime.Now;
-        public List<string> Losses { get; set; } = new List<string>();
+        public List<string> WhiteLosses { get; set; } = new List<string>();
+        public List<string> BlackLosses { get; set; } = new List<string>();
     }
 
 }
