@@ -1,38 +1,30 @@
 import { save_game, load_game } from "./api.js"
-import { INITIAL_STATE } from "./config.js";
+import { Game } from "./game.js";
 
 window.onload = function() {
-    render();
-    // init_handlers();
-}
-
-let stack: object[] = [INITIAL_STATE]
-
-let state = INITIAL_STATE
-let blackLosses: string[] = []
-let whiteLosses: string[] = []
-
-function render() {
-    console.log("Rendering board")
-    init_board();
-    console.log(state)
 
     const urlParams = new URLSearchParams(window.location.search);
     let id = urlParams.get('id')
-    load_game(id!).then(function(json) {
-        set_pieces(json.state)
-    })
+    load_game(id!).then(function (game: Game) {
+        currentGame = game
+    }).then(function() {
+        render(currentGame)
+    });
+
+    // render(currentGame);
+}
+
+var currentGame: Game;
+let blackLosses: string[] = []
+let whiteLosses: string[] = []
+
+function render(currentGame: Game) {
+    console.log("Rendering board")
+    init_board();
+    set_pieces(currentGame.state)
     setLosses();
     init_handlers()
 }
-
-function set_pieces(state: object) {
-    Object.keys(state).forEach(function(position) {
-        console.log(JSON.stringify(state))
-        setPiece((state as any)[position], position)
-    })
-}
-
 
 function init_board() {
     let table: HTMLTableElement = <HTMLTableElement>document.getElementById("board-id")
@@ -59,8 +51,19 @@ function init_handlers() {
     }
 }
 
+function set_pieces(state: Map<string, string>) {
+    state.forEach((v, k) => {
+        setPiece(v, k)
+    })
+}
+
 function setPiece(piece: string, position: string) {
     const el = document.getElementById(position)
+    if (!el) {
+        const msg = "Element null at position: " + position
+        console.log(msg)
+        throw new Error(msg)
+    }
     const img = new Image()
     img.id = piece + position
     img.src = `images/${piece}.svg`
@@ -108,11 +111,10 @@ function drop_handler(cell: HTMLTableCellElement) {
         ev.preventDefault();
         
         const data = ev!.dataTransfer!.getData("text/plain");
-        console.log("finding img: " + data)
         const img = document.getElementById(data);
 
-        if ((img!.parentNode! as any).id == cell.id) {
-            console.log("Cannot capture self")
+        const prevLocation = (img!.parentNode! as any).id
+        if (prevLocation == cell.id) {
             return false
         }
 
@@ -120,17 +122,17 @@ function drop_handler(cell: HTMLTableCellElement) {
             capture(cell.id);
         }
 
-        delete (state as any)[(img!.parentNode! as any).id];
+        currentGame.deleteAt(prevLocation);
 
         const piece = img!.id.substring(0, 2);
-        (state as any)[cell.id] = piece
-        save_game(state)
-        render();
+        currentGame.setPiece(cell.id, piece);
+        save_game(currentGame)
+        render(currentGame);
     }
 }
 
 function capture(position: string) {
-    const piece = (state as any)[position]
+    const piece = currentGame.state.get(position)!
     console.log("position: " + position)
     console.log("piece: " + piece)
     if (piece[0] == "w") {
@@ -138,9 +140,8 @@ function capture(position: string) {
     } else {
         blackLosses.push(piece)
     }
-    delete (state as any)[position]
+    currentGame.deleteAt(position)
 }
-
 
 window.onbeforeunload = function() {
 //   return "There are unsaved changes. Leave now?";

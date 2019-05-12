@@ -1,5 +1,4 @@
-import { list_games } from "./api.js";
-import { INITIAL_STATE, GAME_API } from "./config.js";
+import { list_games, new_game } from "./api.js";
 
 window.onload = function () {
     init();
@@ -7,18 +6,8 @@ window.onload = function () {
 
 function init() {
     const start = document.getElementById("start-game")
-    start!.addEventListener('click', newGame)
+    start!.addEventListener('click', new_game)
     populate_game_list()
-}
-
-function newGame() {
-    fetch(GAME_API, {
-        headers: {
-            "content-type": "application/json"
-        },
-        method: 'POST',
-        body: JSON.stringify({ "state": INITIAL_STATE })
-    })// loading animation //.then(response => window.location.href = gameUrl(response.json().id))
 }
 
 function populate_game_list() {
