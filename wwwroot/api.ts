@@ -2,19 +2,19 @@
 import {GAME_API, INITIAL_STATE} from "./config.js";
 import { Game } from "./game.js";
 
-function list_games() {
+function list_games() : Promise<any> {
     return fetch(GAME_API)
         .then(function(response: Response) {
             return response.json();
         })
 }
 
-function load_game(id: string) {
+function load_game(id: string) : Promise<Game> {
     return fetch(GAME_API + id)
-        .then(function(response: Response) {
+        .then((response: Response)  => {
             return response.json();
-        }).then(function(json) {
-            return new Game(json.id, new Map(Object.entries(json.state)), true, [])
+        }).then((json: any) => {
+            return new Game(json.id, new Map(Object.entries(json.state)), true, json.whiteLosses, json.blackLosses)
         })
 }
 
@@ -25,6 +25,8 @@ function new_game() {
         },
         method: 'POST',
         body: JSON.stringify({ "state": INITIAL_STATE })
+    }).then((response: Response) => {
+        return response.json()
     })
 }
 
