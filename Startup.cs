@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.Extensions.Hosting;
+//using Swashbuckle.AspNetCore.Swagger;
 
 namespace api
 {
@@ -26,36 +26,25 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Chess", Version = "v1" });
-                c.DescribeAllEnumsAsStrings();
-            });
+            /* services.AddSwaggerGen(c => */
+            /* { */
+            /*     c.SwaggerDoc("v1", new Info { Title = "Chess", Version = "v1" }); */
+            /*     c.DescribeAllEnumsAsStrings(); */
+            /* }); */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseHsts();
-            }
-
             // app.UseHttpsRedirection();
-            app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chess V1");
-            });
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+             //   c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chess V1");
+            //});
         }
     }
 }

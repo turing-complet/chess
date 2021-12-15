@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:2.2-sdk AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build-env
 WORKDIR /app
 
 # copy the contents of agent working directory on host to workdir in container
@@ -19,7 +19,7 @@ RUN ls
 RUN tsc -p tsconfig.json
 
 # Second stage - Build runtime image
-FROM microsoft/dotnet:2.2-aspnetcore-runtime
+FROM mcr.microsoft.com/dotnet/aspnet:3.1
 WORKDIR /app
 COPY --from=tsbuild /app ./wwwroot
 COPY --from=build-env /app/out .
