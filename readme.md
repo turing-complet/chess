@@ -1,3 +1,15 @@
-[![Build Status](https://dev.azure.com/rabbitholeinc/chess/_apis/build/status/turing-complet.chess?branchName=master)](https://dev.azure.com/rabbitholeinc/chess/_build/latest?definitionId=2&branchName=master)
 
-The easiest way I could think of to implement chess. With a few artistic flourishes thrown in.
+A chessboard with no validation to tell you what moves you can make.
+Currently requires a blob storage account.
+
+Build:
+```
+docker build . -t chess
+```
+
+Add your connection string to the .env.example file and run this
+```
+docker run -p 3000:80 --env-file .env.example chess:latest
+```
+
+Go to localhost:3000
