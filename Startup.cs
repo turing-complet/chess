@@ -27,6 +27,7 @@ namespace api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chess", Version = "v1" });
@@ -43,6 +44,7 @@ namespace api
             app.UseRouting();
             /* app.MapEndpoints(endpoints => endpoints.MapSwagger()); */
 
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
