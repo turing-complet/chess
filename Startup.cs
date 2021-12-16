@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Hosting;
-//using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 
 namespace api
 {
@@ -26,11 +26,12 @@ namespace api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /* services.AddSwaggerGen(c => */
-            /* { */
-            /*     c.SwaggerDoc("v1", new Info { Title = "Chess", Version = "v1" }); */
-            /*     c.DescribeAllEnumsAsStrings(); */
-            /* }); */
+            services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Chess", Version = "v1" });
+            });
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,12 +40,14 @@ namespace api
             // app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseRouting();
+            /* app.MapEndpoints(endpoints => endpoints.MapSwagger()); */
 
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-             //   c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chess V1");
-            //});
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+               c.SwaggerEndpoint("/swagger/v1/swagger.json", "Chess V1");
+            });
         }
     }
 }
